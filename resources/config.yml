@@ -1,0 +1,13 @@
+spawn-delay: 200
+
+spawner-types:
+  zombie: Zombie
+  skeleton: Skeleton
+  creeper: Creeper
+  spider: Spider
+  enderman: Enderman
+  witch: Witch
+  cow: Cow
+  pig: Pig
+  sheep: Sheep
+  chicken: Chicken
