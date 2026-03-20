@@ -26,26 +26,23 @@ class Main extends PluginBase implements Listener {
     public function onEnable(): void {
         $this->saveDefaultConfig();
 
-        // Register events
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
-        // Add spawners to creative
         $this->registerCreativeSpawners();
 
-        // Start spawning task
         $this->getScheduler()->scheduleRepeatingTask(new ClosureTask(function(): void {
             $this->tickSpawners();
         }), $this->getConfig()->get("spawn-delay"));
     }
 
-    /**
-     * 🔥 Add all spawners to creative inventory
-     */
     private function registerCreativeSpawners(): void {
         $types = $this->getConfig()->get("spawner-types");
 
         foreach ($types as $type => $name) {
-            $item = VanillaBlocks::MOB_SPAWNER()->asItem();
+
+            // ✅ FIXED LINE HERE
+            $item = VanillaBlocks::MONSTER_SPAWNER()->asItem();
+
             $item->setCustomName("§r§a" . ucfirst($type) . " Spawner");
 
             $nbt = new CompoundTag();
@@ -56,9 +53,6 @@ class Main extends PluginBase implements Listener {
         }
     }
 
-    /**
-     * 📦 Give spawner command
-     */
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
         if ($command->getName() === "givespawner") {
             if (!$sender instanceof Player) return true;
@@ -76,7 +70,9 @@ class Main extends PluginBase implements Listener {
                 return true;
             }
 
-            $item = VanillaBlocks::MOB_SPAWNER()->asItem();
+            // ✅ FIXED HERE TOO
+            $item = VanillaBlocks::MONSTER_SPAWNER()->asItem();
+
             $item->setCustomName("§r§a" . ucfirst($type) . " Spawner");
 
             $nbt = new CompoundTag();
@@ -91,9 +87,6 @@ class Main extends PluginBase implements Listener {
         return false;
     }
 
-    /**
-     * 📍 Save placed spawners
-     */
     public function onBlockPlace(BlockPlaceEvent $event): void {
         $item = $event->getItem();
         $nbt = $item->getNamedTag();
@@ -111,9 +104,6 @@ class Main extends PluginBase implements Listener {
         }
     }
 
-    /**
-     * 🔄 Spawner tick loop
-     */
     private function tickSpawners(): void {
         foreach ($this->spawners as $spawner) {
             $world = $this->getServer()->getWorldManager()->getWorldByName($spawner["world"]);
@@ -128,9 +118,6 @@ class Main extends PluginBase implements Listener {
         }
     }
 
-    /**
-     * 🧬 Create entity safely
-     */
     private function createEntity(string $type, Position $pos) {
         $nbt = new CompoundTag();
 
