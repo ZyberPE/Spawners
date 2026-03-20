@@ -1,0 +1,14 @@
+name: Spawners
+main: Spawners\Main
+version: 1.1.0
+api: 5.0.0
+author: ZyberPE
+
+commands:
+  givespawner:
+    description: Give a spawner
+    permission: spawners.command
+
+permissions:
+  spawners.command:
+    default: op
